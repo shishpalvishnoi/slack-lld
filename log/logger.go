@@ -5,7 +5,7 @@ import "go.uber.org/zap"
 func GetNewLogger() *zap.Logger {
 	logger, err := zap.NewProduction()
 	if err != nil {
-		panic(err)
+		logger.Error("Error in logger: ", zap.Error(err))
 	}
 	return logger
 }
