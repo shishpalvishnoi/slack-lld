@@ -261,12 +261,12 @@ func (cmq *ChannelMessageQuery) Clone() *ChannelMessageQuery {
 // Example:
 //
 //	var v []struct {
-//		PostgresArrayCol *pgtype.Int4Array `json:"postgres_array_col,omitempty"`
+//		MessageIds string `json:"messageIds,omitempty"`
 //		Count int `json:"count,omitempty"`
 //	}
 //
 //	client.ChannelMessage.Query().
-//		GroupBy(channelmessage.FieldPostgresArrayCol).
+//		GroupBy(channelmessage.FieldMessageIds).
 //		Aggregate(ent.Count()).
 //		Scan(ctx, &v)
 func (cmq *ChannelMessageQuery) GroupBy(field string, fields ...string) *ChannelMessageGroupBy {
@@ -284,11 +284,11 @@ func (cmq *ChannelMessageQuery) GroupBy(field string, fields ...string) *Channel
 // Example:
 //
 //	var v []struct {
-//		PostgresArrayCol *pgtype.Int4Array `json:"postgres_array_col,omitempty"`
+//		MessageIds string `json:"messageIds,omitempty"`
 //	}
 //
 //	client.ChannelMessage.Query().
-//		Select(channelmessage.FieldPostgresArrayCol).
+//		Select(channelmessage.FieldMessageIds).
 //		Scan(ctx, &v)
 func (cmq *ChannelMessageQuery) Select(fields ...string) *ChannelMessageSelect {
 	cmq.ctx.Fields = append(cmq.ctx.Fields, fields...)

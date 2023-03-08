@@ -8,11 +8,11 @@ import (
 	"fmt"
 	"slack-application/ent/channelmessage"
 	"slack-application/ent/predicate"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/jackc/pgtype"
 )
 
 // ChannelMessageUpdate is the builder for updating ChannelMessage entities.
@@ -28,9 +28,15 @@ func (cmu *ChannelMessageUpdate) Where(ps ...predicate.ChannelMessage) *ChannelM
 	return cmu
 }
 
-// SetPostgresArrayCol sets the "postgres_array_col" field.
-func (cmu *ChannelMessageUpdate) SetPostgresArrayCol(pg *pgtype.Int4Array) *ChannelMessageUpdate {
-	cmu.mutation.SetPostgresArrayCol(pg)
+// SetMessageIds sets the "messageIds" field.
+func (cmu *ChannelMessageUpdate) SetMessageIds(s string) *ChannelMessageUpdate {
+	cmu.mutation.SetMessageIds(s)
+	return cmu
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (cmu *ChannelMessageUpdate) SetCreatedAt(t time.Time) *ChannelMessageUpdate {
+	cmu.mutation.SetCreatedAt(t)
 	return cmu
 }
 
@@ -75,8 +81,11 @@ func (cmu *ChannelMessageUpdate) sqlSave(ctx context.Context) (n int, err error)
 			}
 		}
 	}
-	if value, ok := cmu.mutation.PostgresArrayCol(); ok {
-		_spec.SetField(channelmessage.FieldPostgresArrayCol, field.TypeOther, value)
+	if value, ok := cmu.mutation.MessageIds(); ok {
+		_spec.SetField(channelmessage.FieldMessageIds, field.TypeString, value)
+	}
+	if value, ok := cmu.mutation.CreatedAt(); ok {
+		_spec.SetField(channelmessage.FieldCreatedAt, field.TypeTime, value)
 	}
 	if n, err = sqlgraph.UpdateNodes(ctx, cmu.driver, _spec); err != nil {
 		if _, ok := err.(*sqlgraph.NotFoundError); ok {
@@ -98,9 +107,15 @@ type ChannelMessageUpdateOne struct {
 	mutation *ChannelMessageMutation
 }
 
-// SetPostgresArrayCol sets the "postgres_array_col" field.
-func (cmuo *ChannelMessageUpdateOne) SetPostgresArrayCol(pg *pgtype.Int4Array) *ChannelMessageUpdateOne {
-	cmuo.mutation.SetPostgresArrayCol(pg)
+// SetMessageIds sets the "messageIds" field.
+func (cmuo *ChannelMessageUpdateOne) SetMessageIds(s string) *ChannelMessageUpdateOne {
+	cmuo.mutation.SetMessageIds(s)
+	return cmuo
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (cmuo *ChannelMessageUpdateOne) SetCreatedAt(t time.Time) *ChannelMessageUpdateOne {
+	cmuo.mutation.SetCreatedAt(t)
 	return cmuo
 }
 
@@ -175,8 +190,11 @@ func (cmuo *ChannelMessageUpdateOne) sqlSave(ctx context.Context) (_node *Channe
 			}
 		}
 	}
-	if value, ok := cmuo.mutation.PostgresArrayCol(); ok {
-		_spec.SetField(channelmessage.FieldPostgresArrayCol, field.TypeOther, value)
+	if value, ok := cmuo.mutation.MessageIds(); ok {
+		_spec.SetField(channelmessage.FieldMessageIds, field.TypeString, value)
+	}
+	if value, ok := cmuo.mutation.CreatedAt(); ok {
+		_spec.SetField(channelmessage.FieldCreatedAt, field.TypeTime, value)
 	}
 	_node = &ChannelMessage{config: cmuo.config}
 	_spec.Assign = _node.assignValues

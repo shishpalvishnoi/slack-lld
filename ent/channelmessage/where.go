@@ -4,9 +4,9 @@ package channelmessage
 
 import (
 	"slack-application/ent/predicate"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
-	"github.com/jackc/pgtype"
 )
 
 // ID filters vertices based on their ID field.
@@ -54,49 +54,119 @@ func IDLTE(id int) predicate.ChannelMessage {
 	return predicate.ChannelMessage(sql.FieldLTE(FieldID, id))
 }
 
-// PostgresArrayCol applies equality check predicate on the "postgres_array_col" field. It's identical to PostgresArrayColEQ.
-func PostgresArrayCol(v *pgtype.Int4Array) predicate.ChannelMessage {
-	return predicate.ChannelMessage(sql.FieldEQ(FieldPostgresArrayCol, v))
+// MessageIds applies equality check predicate on the "messageIds" field. It's identical to MessageIdsEQ.
+func MessageIds(v string) predicate.ChannelMessage {
+	return predicate.ChannelMessage(sql.FieldEQ(FieldMessageIds, v))
 }
 
-// PostgresArrayColEQ applies the EQ predicate on the "postgres_array_col" field.
-func PostgresArrayColEQ(v *pgtype.Int4Array) predicate.ChannelMessage {
-	return predicate.ChannelMessage(sql.FieldEQ(FieldPostgresArrayCol, v))
+// CreatedAt applies equality check predicate on the "created_at" field. It's identical to CreatedAtEQ.
+func CreatedAt(v time.Time) predicate.ChannelMessage {
+	return predicate.ChannelMessage(sql.FieldEQ(FieldCreatedAt, v))
 }
 
-// PostgresArrayColNEQ applies the NEQ predicate on the "postgres_array_col" field.
-func PostgresArrayColNEQ(v *pgtype.Int4Array) predicate.ChannelMessage {
-	return predicate.ChannelMessage(sql.FieldNEQ(FieldPostgresArrayCol, v))
+// MessageIdsEQ applies the EQ predicate on the "messageIds" field.
+func MessageIdsEQ(v string) predicate.ChannelMessage {
+	return predicate.ChannelMessage(sql.FieldEQ(FieldMessageIds, v))
 }
 
-// PostgresArrayColIn applies the In predicate on the "postgres_array_col" field.
-func PostgresArrayColIn(vs ...*pgtype.Int4Array) predicate.ChannelMessage {
-	return predicate.ChannelMessage(sql.FieldIn(FieldPostgresArrayCol, vs...))
+// MessageIdsNEQ applies the NEQ predicate on the "messageIds" field.
+func MessageIdsNEQ(v string) predicate.ChannelMessage {
+	return predicate.ChannelMessage(sql.FieldNEQ(FieldMessageIds, v))
 }
 
-// PostgresArrayColNotIn applies the NotIn predicate on the "postgres_array_col" field.
-func PostgresArrayColNotIn(vs ...*pgtype.Int4Array) predicate.ChannelMessage {
-	return predicate.ChannelMessage(sql.FieldNotIn(FieldPostgresArrayCol, vs...))
+// MessageIdsIn applies the In predicate on the "messageIds" field.
+func MessageIdsIn(vs ...string) predicate.ChannelMessage {
+	return predicate.ChannelMessage(sql.FieldIn(FieldMessageIds, vs...))
 }
 
-// PostgresArrayColGT applies the GT predicate on the "postgres_array_col" field.
-func PostgresArrayColGT(v *pgtype.Int4Array) predicate.ChannelMessage {
-	return predicate.ChannelMessage(sql.FieldGT(FieldPostgresArrayCol, v))
+// MessageIdsNotIn applies the NotIn predicate on the "messageIds" field.
+func MessageIdsNotIn(vs ...string) predicate.ChannelMessage {
+	return predicate.ChannelMessage(sql.FieldNotIn(FieldMessageIds, vs...))
 }
 
-// PostgresArrayColGTE applies the GTE predicate on the "postgres_array_col" field.
-func PostgresArrayColGTE(v *pgtype.Int4Array) predicate.ChannelMessage {
-	return predicate.ChannelMessage(sql.FieldGTE(FieldPostgresArrayCol, v))
+// MessageIdsGT applies the GT predicate on the "messageIds" field.
+func MessageIdsGT(v string) predicate.ChannelMessage {
+	return predicate.ChannelMessage(sql.FieldGT(FieldMessageIds, v))
 }
 
-// PostgresArrayColLT applies the LT predicate on the "postgres_array_col" field.
-func PostgresArrayColLT(v *pgtype.Int4Array) predicate.ChannelMessage {
-	return predicate.ChannelMessage(sql.FieldLT(FieldPostgresArrayCol, v))
+// MessageIdsGTE applies the GTE predicate on the "messageIds" field.
+func MessageIdsGTE(v string) predicate.ChannelMessage {
+	return predicate.ChannelMessage(sql.FieldGTE(FieldMessageIds, v))
 }
 
-// PostgresArrayColLTE applies the LTE predicate on the "postgres_array_col" field.
-func PostgresArrayColLTE(v *pgtype.Int4Array) predicate.ChannelMessage {
-	return predicate.ChannelMessage(sql.FieldLTE(FieldPostgresArrayCol, v))
+// MessageIdsLT applies the LT predicate on the "messageIds" field.
+func MessageIdsLT(v string) predicate.ChannelMessage {
+	return predicate.ChannelMessage(sql.FieldLT(FieldMessageIds, v))
+}
+
+// MessageIdsLTE applies the LTE predicate on the "messageIds" field.
+func MessageIdsLTE(v string) predicate.ChannelMessage {
+	return predicate.ChannelMessage(sql.FieldLTE(FieldMessageIds, v))
+}
+
+// MessageIdsContains applies the Contains predicate on the "messageIds" field.
+func MessageIdsContains(v string) predicate.ChannelMessage {
+	return predicate.ChannelMessage(sql.FieldContains(FieldMessageIds, v))
+}
+
+// MessageIdsHasPrefix applies the HasPrefix predicate on the "messageIds" field.
+func MessageIdsHasPrefix(v string) predicate.ChannelMessage {
+	return predicate.ChannelMessage(sql.FieldHasPrefix(FieldMessageIds, v))
+}
+
+// MessageIdsHasSuffix applies the HasSuffix predicate on the "messageIds" field.
+func MessageIdsHasSuffix(v string) predicate.ChannelMessage {
+	return predicate.ChannelMessage(sql.FieldHasSuffix(FieldMessageIds, v))
+}
+
+// MessageIdsEqualFold applies the EqualFold predicate on the "messageIds" field.
+func MessageIdsEqualFold(v string) predicate.ChannelMessage {
+	return predicate.ChannelMessage(sql.FieldEqualFold(FieldMessageIds, v))
+}
+
+// MessageIdsContainsFold applies the ContainsFold predicate on the "messageIds" field.
+func MessageIdsContainsFold(v string) predicate.ChannelMessage {
+	return predicate.ChannelMessage(sql.FieldContainsFold(FieldMessageIds, v))
+}
+
+// CreatedAtEQ applies the EQ predicate on the "created_at" field.
+func CreatedAtEQ(v time.Time) predicate.ChannelMessage {
+	return predicate.ChannelMessage(sql.FieldEQ(FieldCreatedAt, v))
+}
+
+// CreatedAtNEQ applies the NEQ predicate on the "created_at" field.
+func CreatedAtNEQ(v time.Time) predicate.ChannelMessage {
+	return predicate.ChannelMessage(sql.FieldNEQ(FieldCreatedAt, v))
+}
+
+// CreatedAtIn applies the In predicate on the "created_at" field.
+func CreatedAtIn(vs ...time.Time) predicate.ChannelMessage {
+	return predicate.ChannelMessage(sql.FieldIn(FieldCreatedAt, vs...))
+}
+
+// CreatedAtNotIn applies the NotIn predicate on the "created_at" field.
+func CreatedAtNotIn(vs ...time.Time) predicate.ChannelMessage {
+	return predicate.ChannelMessage(sql.FieldNotIn(FieldCreatedAt, vs...))
+}
+
+// CreatedAtGT applies the GT predicate on the "created_at" field.
+func CreatedAtGT(v time.Time) predicate.ChannelMessage {
+	return predicate.ChannelMessage(sql.FieldGT(FieldCreatedAt, v))
+}
+
+// CreatedAtGTE applies the GTE predicate on the "created_at" field.
+func CreatedAtGTE(v time.Time) predicate.ChannelMessage {
+	return predicate.ChannelMessage(sql.FieldGTE(FieldCreatedAt, v))
+}
+
+// CreatedAtLT applies the LT predicate on the "created_at" field.
+func CreatedAtLT(v time.Time) predicate.ChannelMessage {
+	return predicate.ChannelMessage(sql.FieldLT(FieldCreatedAt, v))
+}
+
+// CreatedAtLTE applies the LTE predicate on the "created_at" field.
+func CreatedAtLTE(v time.Time) predicate.ChannelMessage {
+	return predicate.ChannelMessage(sql.FieldLTE(FieldCreatedAt, v))
 }
 
 // And groups predicates with the AND operator between them.

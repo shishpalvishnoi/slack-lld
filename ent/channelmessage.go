@@ -6,9 +6,9 @@ import (
 	"fmt"
 	"slack-application/ent/channelmessage"
 	"strings"
+	"time"
 
 	"entgo.io/ent/dialect/sql"
-	"github.com/jackc/pgtype"
 )
 
 // ChannelMessage is the model entity for the ChannelMessage schema.
@@ -16,8 +16,10 @@ type ChannelMessage struct {
 	config `json:"-"`
 	// ID of the ent.
 	ID int `json:"id,omitempty"`
-	// PostgresArrayCol holds the value of the "postgres_array_col" field.
-	PostgresArrayCol *pgtype.Int4Array `json:"postgres_array_col,omitempty"`
+	// MessageIds holds the value of the "messageIds" field.
+	MessageIds string `json:"messageIds,omitempty"`
+	// CreatedAt holds the value of the "created_at" field.
+	CreatedAt time.Time `json:"created_at,omitempty"`
 }
 
 // scanValues returns the types for scanning values from sql.Rows.
@@ -25,10 +27,12 @@ func (*ChannelMessage) scanValues(columns []string) ([]any, error) {
 	values := make([]any, len(columns))
 	for i := range columns {
 		switch columns[i] {
-		case channelmessage.FieldPostgresArrayCol:
-			values[i] = new(pgtype.Int4Array)
 		case channelmessage.FieldID:
 			values[i] = new(sql.NullInt64)
+		case channelmessage.FieldMessageIds:
+			values[i] = new(sql.NullString)
+		case channelmessage.FieldCreatedAt:
+			values[i] = new(sql.NullTime)
 		default:
 			return nil, fmt.Errorf("unexpected column %q for type ChannelMessage", columns[i])
 		}
@@ -50,11 +54,17 @@ func (cm *ChannelMessage) assignValues(columns []string, values []any) error {
 				return fmt.Errorf("unexpected type %T for field id", value)
 			}
 			cm.ID = int(value.Int64)
-		case channelmessage.FieldPostgresArrayCol:
-			if value, ok := values[i].(*pgtype.Int4Array); !ok {
-				return fmt.Errorf("unexpected type %T for field postgres_array_col", values[i])
-			} else if value != nil {
-				cm.PostgresArrayCol = value
+		case channelmessage.FieldMessageIds:
+			if value, ok := values[i].(*sql.NullString); !ok {
+				return fmt.Errorf("unexpected type %T for field messageIds", values[i])
+			} else if value.Valid {
+				cm.MessageIds = value.String
+			}
+		case channelmessage.FieldCreatedAt:
+			if value, ok := values[i].(*sql.NullTime); !ok {
+				return fmt.Errorf("unexpected type %T for field created_at", values[i])
+			} else if value.Valid {
+				cm.CreatedAt = value.Time
 			}
 		}
 	}
@@ -84,8 +94,11 @@ func (cm *ChannelMessage) String() string {
 	var builder strings.Builder
 	builder.WriteString("ChannelMessage(")
 	builder.WriteString(fmt.Sprintf("id=%v, ", cm.ID))
-	builder.WriteString("postgres_array_col=")
-	builder.WriteString(fmt.Sprintf("%v", cm.PostgresArrayCol))
+	builder.WriteString("messageIds=")
+	builder.WriteString(cm.MessageIds)
+	builder.WriteString(", ")
+	builder.WriteString("created_at=")
+	builder.WriteString(cm.CreatedAt.Format(time.ANSIC))
 	builder.WriteByte(')')
 	return builder.String()
 }

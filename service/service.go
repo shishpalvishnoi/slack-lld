@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"encoding/json"
 	"slack-application/database"
 	"slack-application/models"
 	"time"
@@ -62,17 +63,47 @@ func (s *Service) AddUserToChannel(ctx context.Context, addUserToChannelReq mode
 }
 
 func (s *Service) SendMessageToChannel(ctx context.Context, sendMessageReq models.SendMessageToChReq) error {
-	_, err := database.Client.Message.Create().
+	var mId int64
+	entMsg, err := database.Client.Message.Create().
 		SetUserID(sendMessageReq.UserId).
 		SetWorkspaceID(sendMessageReq.WorkspaceId).
 		SetAttachment(sendMessageReq.Attachment).
 		SetData(sendMessageReq.Content).
 		SetCreatedAt(time.Now()).
 		Save(context.Background())
+	if err != nil {
+		return err
+	}
+	mId = entMsg.UserID
 
 	// add messageId in channel message table
+	chId := sendMessageReq.ChannelId
+	chMessage, err := database.Client.ChannelMessage.Get(ctx, int(chId))
+	if err != nil {
+		return err
+	}
 
+	// add current messageId here and update
+	mIds := []byte(chMessage.MessageIds)
+	var messageIds []int64
+	err = json.Unmarshal(mIds, &messageIds)
+	if err != nil {
+		return err
+	}
+	messageIds = append(messageIds, mId)
+	byteMIds, err := json.Marshal(messageIds)
+	if err != nil {
+		return err
+	}
+
+	err = database.Client.ChannelMessage.UpdateOneID(chMessage.ID).SetMessageIds(string(byteMIds)).Exec(ctx)
 	return err
+}
+
+// Todo: complete
+func (s *Service) GetChannelMessages(ctx context.Context) {
+	// hit user channel table and get message ids (filter by created_at)
+	// get message data from messages table
 }
 
 func (s *Service) SendMessageToUser(ctx context.Context, sendMessageReq models.SendMessageToUserReq) error {

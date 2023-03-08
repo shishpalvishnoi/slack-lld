@@ -24,7 +24,8 @@ var (
 	// ChannelMessagesColumns holds the columns for the "channel_messages" table.
 	ChannelMessagesColumns = []*schema.Column{
 		{Name: "id", Type: field.TypeInt, Increment: true},
-		{Name: "postgres_array_col", Type: field.TypeOther, SchemaType: map[string]string{"postgres": "integer[]"}},
+		{Name: "message_ids", Type: field.TypeString},
+		{Name: "created_at", Type: field.TypeTime},
 	}
 	// ChannelMessagesTable holds the schema information for the "channel_messages" table.
 	ChannelMessagesTable = &schema.Table{

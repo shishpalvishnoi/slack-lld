@@ -7,10 +7,10 @@ import (
 	"errors"
 	"fmt"
 	"slack-application/ent/channelmessage"
+	"time"
 
 	"entgo.io/ent/dialect/sql/sqlgraph"
 	"entgo.io/ent/schema/field"
-	"github.com/jackc/pgtype"
 )
 
 // ChannelMessageCreate is the builder for creating a ChannelMessage entity.
@@ -20,9 +20,15 @@ type ChannelMessageCreate struct {
 	hooks    []Hook
 }
 
-// SetPostgresArrayCol sets the "postgres_array_col" field.
-func (cmc *ChannelMessageCreate) SetPostgresArrayCol(pg *pgtype.Int4Array) *ChannelMessageCreate {
-	cmc.mutation.SetPostgresArrayCol(pg)
+// SetMessageIds sets the "messageIds" field.
+func (cmc *ChannelMessageCreate) SetMessageIds(s string) *ChannelMessageCreate {
+	cmc.mutation.SetMessageIds(s)
+	return cmc
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (cmc *ChannelMessageCreate) SetCreatedAt(t time.Time) *ChannelMessageCreate {
+	cmc.mutation.SetCreatedAt(t)
 	return cmc
 }
 
@@ -60,8 +66,11 @@ func (cmc *ChannelMessageCreate) ExecX(ctx context.Context) {
 
 // check runs all checks and user-defined validators on the builder.
 func (cmc *ChannelMessageCreate) check() error {
-	if _, ok := cmc.mutation.PostgresArrayCol(); !ok {
-		return &ValidationError{Name: "postgres_array_col", err: errors.New(`ent: missing required field "ChannelMessage.postgres_array_col"`)}
+	if _, ok := cmc.mutation.MessageIds(); !ok {
+		return &ValidationError{Name: "messageIds", err: errors.New(`ent: missing required field "ChannelMessage.messageIds"`)}
+	}
+	if _, ok := cmc.mutation.CreatedAt(); !ok {
+		return &ValidationError{Name: "created_at", err: errors.New(`ent: missing required field "ChannelMessage.created_at"`)}
 	}
 	return nil
 }
@@ -89,9 +98,13 @@ func (cmc *ChannelMessageCreate) createSpec() (*ChannelMessage, *sqlgraph.Create
 		_node = &ChannelMessage{config: cmc.config}
 		_spec = sqlgraph.NewCreateSpec(channelmessage.Table, sqlgraph.NewFieldSpec(channelmessage.FieldID, field.TypeInt))
 	)
-	if value, ok := cmc.mutation.PostgresArrayCol(); ok {
-		_spec.SetField(channelmessage.FieldPostgresArrayCol, field.TypeOther, value)
-		_node.PostgresArrayCol = value
+	if value, ok := cmc.mutation.MessageIds(); ok {
+		_spec.SetField(channelmessage.FieldMessageIds, field.TypeString, value)
+		_node.MessageIds = value
+	}
+	if value, ok := cmc.mutation.CreatedAt(); ok {
+		_spec.SetField(channelmessage.FieldCreatedAt, field.TypeTime, value)
+		_node.CreatedAt = value
 	}
 	return _node, _spec
 }

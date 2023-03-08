@@ -19,7 +19,6 @@ import (
 
 	"entgo.io/ent"
 	"entgo.io/ent/dialect/sql"
-	"github.com/jackc/pgtype"
 )
 
 const (
@@ -513,14 +512,15 @@ func (m *ChannelMutation) ResetEdge(name string) error {
 // ChannelMessageMutation represents an operation that mutates the ChannelMessage nodes in the graph.
 type ChannelMessageMutation struct {
 	config
-	op                 Op
-	typ                string
-	id                 *int
-	postgres_array_col **pgtype.Int4Array
-	clearedFields      map[string]struct{}
-	done               bool
-	oldValue           func(context.Context) (*ChannelMessage, error)
-	predicates         []predicate.ChannelMessage
+	op            Op
+	typ           string
+	id            *int
+	messageIds    *string
+	created_at    *time.Time
+	clearedFields map[string]struct{}
+	done          bool
+	oldValue      func(context.Context) (*ChannelMessage, error)
+	predicates    []predicate.ChannelMessage
 }
 
 var _ ent.Mutation = (*ChannelMessageMutation)(nil)
@@ -621,40 +621,76 @@ func (m *ChannelMessageMutation) IDs(ctx context.Context) ([]int, error) {
 	}
 }
 
-// SetPostgresArrayCol sets the "postgres_array_col" field.
-func (m *ChannelMessageMutation) SetPostgresArrayCol(pg *pgtype.Int4Array) {
-	m.postgres_array_col = &pg
+// SetMessageIds sets the "messageIds" field.
+func (m *ChannelMessageMutation) SetMessageIds(s string) {
+	m.messageIds = &s
 }
 
-// PostgresArrayCol returns the value of the "postgres_array_col" field in the mutation.
-func (m *ChannelMessageMutation) PostgresArrayCol() (r *pgtype.Int4Array, exists bool) {
-	v := m.postgres_array_col
+// MessageIds returns the value of the "messageIds" field in the mutation.
+func (m *ChannelMessageMutation) MessageIds() (r string, exists bool) {
+	v := m.messageIds
 	if v == nil {
 		return
 	}
 	return *v, true
 }
 
-// OldPostgresArrayCol returns the old "postgres_array_col" field's value of the ChannelMessage entity.
+// OldMessageIds returns the old "messageIds" field's value of the ChannelMessage entity.
 // If the ChannelMessage object wasn't provided to the builder, the object is fetched from the database.
 // An error is returned if the mutation operation is not UpdateOne, or the database query fails.
-func (m *ChannelMessageMutation) OldPostgresArrayCol(ctx context.Context) (v *pgtype.Int4Array, err error) {
+func (m *ChannelMessageMutation) OldMessageIds(ctx context.Context) (v string, err error) {
 	if !m.op.Is(OpUpdateOne) {
-		return v, errors.New("OldPostgresArrayCol is only allowed on UpdateOne operations")
+		return v, errors.New("OldMessageIds is only allowed on UpdateOne operations")
 	}
 	if m.id == nil || m.oldValue == nil {
-		return v, errors.New("OldPostgresArrayCol requires an ID field in the mutation")
+		return v, errors.New("OldMessageIds requires an ID field in the mutation")
 	}
 	oldValue, err := m.oldValue(ctx)
 	if err != nil {
-		return v, fmt.Errorf("querying old value for OldPostgresArrayCol: %w", err)
+		return v, fmt.Errorf("querying old value for OldMessageIds: %w", err)
 	}
-	return oldValue.PostgresArrayCol, nil
+	return oldValue.MessageIds, nil
 }
 
-// ResetPostgresArrayCol resets all changes to the "postgres_array_col" field.
-func (m *ChannelMessageMutation) ResetPostgresArrayCol() {
-	m.postgres_array_col = nil
+// ResetMessageIds resets all changes to the "messageIds" field.
+func (m *ChannelMessageMutation) ResetMessageIds() {
+	m.messageIds = nil
+}
+
+// SetCreatedAt sets the "created_at" field.
+func (m *ChannelMessageMutation) SetCreatedAt(t time.Time) {
+	m.created_at = &t
+}
+
+// CreatedAt returns the value of the "created_at" field in the mutation.
+func (m *ChannelMessageMutation) CreatedAt() (r time.Time, exists bool) {
+	v := m.created_at
+	if v == nil {
+		return
+	}
+	return *v, true
+}
+
+// OldCreatedAt returns the old "created_at" field's value of the ChannelMessage entity.
+// If the ChannelMessage object wasn't provided to the builder, the object is fetched from the database.
+// An error is returned if the mutation operation is not UpdateOne, or the database query fails.
+func (m *ChannelMessageMutation) OldCreatedAt(ctx context.Context) (v time.Time, err error) {
+	if !m.op.Is(OpUpdateOne) {
+		return v, errors.New("OldCreatedAt is only allowed on UpdateOne operations")
+	}
+	if m.id == nil || m.oldValue == nil {
+		return v, errors.New("OldCreatedAt requires an ID field in the mutation")
+	}
+	oldValue, err := m.oldValue(ctx)
+	if err != nil {
+		return v, fmt.Errorf("querying old value for OldCreatedAt: %w", err)
+	}
+	return oldValue.CreatedAt, nil
+}
+
+// ResetCreatedAt resets all changes to the "created_at" field.
+func (m *ChannelMessageMutation) ResetCreatedAt() {
+	m.created_at = nil
 }
 
 // Where appends a list predicates to the ChannelMessageMutation builder.
@@ -691,9 +727,12 @@ func (m *ChannelMessageMutation) Type() string {
 // order to get all numeric fields that were incremented/decremented, call
 // AddedFields().
 func (m *ChannelMessageMutation) Fields() []string {
-	fields := make([]string, 0, 1)
-	if m.postgres_array_col != nil {
-		fields = append(fields, channelmessage.FieldPostgresArrayCol)
+	fields := make([]string, 0, 2)
+	if m.messageIds != nil {
+		fields = append(fields, channelmessage.FieldMessageIds)
+	}
+	if m.created_at != nil {
+		fields = append(fields, channelmessage.FieldCreatedAt)
 	}
 	return fields
 }
@@ -703,8 +742,10 @@ func (m *ChannelMessageMutation) Fields() []string {
 // schema.
 func (m *ChannelMessageMutation) Field(name string) (ent.Value, bool) {
 	switch name {
-	case channelmessage.FieldPostgresArrayCol:
-		return m.PostgresArrayCol()
+	case channelmessage.FieldMessageIds:
+		return m.MessageIds()
+	case channelmessage.FieldCreatedAt:
+		return m.CreatedAt()
 	}
 	return nil, false
 }
@@ -714,8 +755,10 @@ func (m *ChannelMessageMutation) Field(name string) (ent.Value, bool) {
 // database failed.
 func (m *ChannelMessageMutation) OldField(ctx context.Context, name string) (ent.Value, error) {
 	switch name {
-	case channelmessage.FieldPostgresArrayCol:
-		return m.OldPostgresArrayCol(ctx)
+	case channelmessage.FieldMessageIds:
+		return m.OldMessageIds(ctx)
+	case channelmessage.FieldCreatedAt:
+		return m.OldCreatedAt(ctx)
 	}
 	return nil, fmt.Errorf("unknown ChannelMessage field %s", name)
 }
@@ -725,12 +768,19 @@ func (m *ChannelMessageMutation) OldField(ctx context.Context, name string) (ent
 // type.
 func (m *ChannelMessageMutation) SetField(name string, value ent.Value) error {
 	switch name {
-	case channelmessage.FieldPostgresArrayCol:
-		v, ok := value.(*pgtype.Int4Array)
+	case channelmessage.FieldMessageIds:
+		v, ok := value.(string)
 		if !ok {
 			return fmt.Errorf("unexpected type %T for field %s", value, name)
 		}
-		m.SetPostgresArrayCol(v)
+		m.SetMessageIds(v)
+		return nil
+	case channelmessage.FieldCreatedAt:
+		v, ok := value.(time.Time)
+		if !ok {
+			return fmt.Errorf("unexpected type %T for field %s", value, name)
+		}
+		m.SetCreatedAt(v)
 		return nil
 	}
 	return fmt.Errorf("unknown ChannelMessage field %s", name)
@@ -781,8 +831,11 @@ func (m *ChannelMessageMutation) ClearField(name string) error {
 // It returns an error if the field is not defined in the schema.
 func (m *ChannelMessageMutation) ResetField(name string) error {
 	switch name {
-	case channelmessage.FieldPostgresArrayCol:
-		m.ResetPostgresArrayCol()
+	case channelmessage.FieldMessageIds:
+		m.ResetMessageIds()
+		return nil
+	case channelmessage.FieldCreatedAt:
+		m.ResetCreatedAt()
 		return nil
 	}
 	return fmt.Errorf("unknown ChannelMessage field %s", name)
