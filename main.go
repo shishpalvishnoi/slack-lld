@@ -9,11 +9,10 @@ import (
 
 var (
 	logger = log.GetNewLogger()
-	wg = &sync.WaitGroup{}
+	wg     = &sync.WaitGroup{}
 )
 
 func main() {
-
 
 	logger.Info("slack application started!")
 
